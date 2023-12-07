@@ -1,0 +1,41 @@
+#include <stdio.h>
+
+int main(int argc, char *argv[]) {
+    // 프로그램이 제대로 사용되었는지 확인
+    if (argc != 3) {
+        printf("사용법: %s <원본 파일> <대상 파일>\n", argv[0]);
+        return 1;
+    }
+
+    // 원본 파일 열기
+    FILE *sourceFile = fopen(argv[1], "rb");
+    if (sourceFile == NULL) {
+        perror("원본 파일 열기 실패");
+        return 2;
+    }
+
+    // 대상 파일 열기 (쓰기 모드)
+    FILE *destinationFile = fopen(argv[2], "wb");
+    if (destinationFile == NULL) {
+        perror("대상 파일 열기 실패");
+        fclose(sourceFile);
+        return 3;
+    }
+
+    // 파일 복사 수행
+    int ch;
+    while ((ch = fgetc(sourceFile)) != EOF) {
+        fputc(ch, destinationFile);
+    }
+
+    // 파일 닫기
+    fclose(sourceFile);
+    fclose(destinationFile);
+
+    printf("파일 복사 완료: %s -> %s\n", argv[1], argv[2]);
+
+    return 0;
+}
+
+// 명령 프롬프트 카피 명령어
+// mycp f1.txt f2.txt
